@@ -121,7 +121,12 @@ class tabengine (IBus.Engine):
         self.do_connect()
 
         self.clear_data()
-        self._lookup_table = IBus.LookupTable (tabengine._page_size)
+        self._lookup_table = IBus.LookupTable.new(
+            page_size=10,
+            cursor_pos=0,
+            cursor_visible=True,
+            round=True)
+
 
         self._name = 'sdim'
         print 'name is', self._name
@@ -199,14 +204,14 @@ class tabengine (IBus.Engine):
         _cands = self._cands_str.split()
         _cands = [_str_percent_decode(str) for str in _cands]
 
-        self._lookup_table.clean()
+        self._lookup_table.clear()
 
         for cand in _cands:
             self._lookup_table.append_candidate(IBus.Text.new_from_string(cand))
 
         index = int(self._cand_idx) % 10
         self._lookup_table.set_cursor_pos(index)
-        self._lookup_table.show_cursor(True)
+        self._lookup_table.set_cursor_visible(True)
         self.update_lookup_table ( self._lookup_table, True)
 
     def _update_ui (self):
